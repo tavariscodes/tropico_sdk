@@ -21,10 +21,7 @@ fn get_application_process() -> (u32, HWND) {
 fn main() {
     unsafe {
         let ( mut process_id, window) = get_application_process();
-        println!("{:?}", window);
         GetWindowThreadProcessId(window, &mut process_id);
-        println!("ProcessID: {}", process_id);
-
         let p_handle: HANDLE = OpenProcess(PROCESS_ALL_ACCESS, 0, process_id);
 
         if p_handle.is_null() {
@@ -33,9 +30,7 @@ fn main() {
         
         let address: uintptr_t = 0x2346EE9CE2C;
         let mut buffer = [0u8; 1];
-
-        let result = ReadProcessMemory(p_handle, address as *const _, buffer.as_mut_ptr() as *mut _, buffer.len(), ptr::null_mut());
-
+        ReadProcessMemory(p_handle, address as *const _, buffer.as_mut_ptr() as *mut _, buffer.len(), ptr::null_mut());
         println!("buf: {:?}", buffer)
     }
 }
